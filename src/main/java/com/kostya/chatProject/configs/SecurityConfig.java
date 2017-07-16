@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 /**
@@ -29,7 +30,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().hasRole("USER");
+        http.authorizeRequests().antMatchers("/personal/**").hasRole("USER").and()
+                .formLogin().loginPage("/login").passwordParameter("password").usernameParameter("login")
+
+                .successHandler((request, response, authentication)-> {
+                        if (response.isCommitted()) {
+                            return;
+                        }
+                        new DefaultRedirectStrategy().sendRedirect(request, response, "/home");
+                    }
+                )
+                .permitAll();
     }
 
     @Bean

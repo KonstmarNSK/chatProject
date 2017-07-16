@@ -3,6 +3,7 @@ package com.kostya.chatProject.entities;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -48,5 +49,15 @@ public class User {
 
     public long getId() {
         return id;
+    }
+
+    public void addAuthority(String authority){
+        if(authorities == null){
+            authorities = new HashSet<>();
+        }
+        Authority newAuthority = new Authority();
+        newAuthority.setAuthority(authority);
+
+        this.authorities.add(newAuthority);
     }
 }

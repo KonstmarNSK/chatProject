@@ -8,7 +8,9 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 
 /**
  * Created by Костя on 15.07.2017.
@@ -39,6 +41,10 @@ public class UserRepositoryImplementation implements UserRepository {
         Query getUserQuery = session.createQuery("from User U where U.login=:username");
         getUserQuery.setParameter("username", username);
 
-        return (User)getUserQuery.getSingleResult();
+        try {
+            return (User) getUserQuery.getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
     }
 }

@@ -26,7 +26,7 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userRepository.getUserByUsername(s);
 
-        return new UserDetails() {
+        return (user == null)? null : new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
                 return user.getAuthorities();
